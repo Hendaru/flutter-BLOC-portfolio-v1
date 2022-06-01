@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:transisi/bloc/homeCubit/home_cubit.dart';
 import 'package:transisi/bloc/loginCubit/login_cubit.dart';
 import 'package:transisi/common/widget/customBottom.dart';
+import 'package:transisi/router/routeName.dart';
+import 'package:transisi/ui/home/home.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -11,8 +15,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _emailController =
+      TextEditingController(text: "eve.holt@reqres.in");
+  TextEditingController _passwordController =
+      TextEditingController(text: "cityslicka");
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool _registerLoad = false;
@@ -21,30 +27,68 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<LoginCubit, LoginState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Welcome',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      // color: colorBlue,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  _form(state, context),
-                  SizedBox(height: 20),
-                  _register(context)
-                ],
+          listener: (context, state) async {
+        print(state);
+        if (state is LoginErrorState) {
+          Fluttertoast.showToast(msg: state.errorMessage!);
+        } else if (state is LoginSuccessState) {
+          await BlocProvider.of<HomeCubit>(context).getListEmployee();
+
+          Fluttertoast.showToast(msg: state.response!);
+          Navigator.of(context).pushReplacementNamed(
+            RouteName.home,
+          );
+        } else if (state is RegisterSuccessState) {
+          Fluttertoast.showToast(msg: state.responseMessage!);
+        }
+        //  else if (state is TokenExistState) {
+        //   Navigator.of(context).pushReplacementNamed(
+        //     RouteName.home,
+        //   );
+        // }
+      }, builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Welcome',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  // color: colorBlue,
+                ),
               ),
-            );
-          }),
+              SizedBox(height: 20),
+              _form(state, context),
+              SizedBox(height: 20),
+              _register(context)
+            ],
+          ),
+        );
+        // if (state is TokenExistState) {
+        //   return Home();
+        // } else if (state is LoginInitialState) {
+
+        // } else if (state is LoginLoadingState) {
+        //   return Center(
+        //     child: SizedBox(
+        //       child: CircularProgressIndicator(),
+        //       height: 50.0,
+        //       width: 50.0,
+        //     ),
+        //   );
+        // }
+        // return Center(
+        //   child: SizedBox(
+        //     child: CircularProgressIndicator(),
+        //     height: 50.0,
+        //     width: 50.0,
+        //   ),
+        // );
+      }),
     );
   }
 
@@ -101,13 +145,10 @@ class _LoginState extends State<Login> {
                   title: "Register",
                   onTap: () {
                     if (formKey.currentState!.validate()) {
-                      // BlocProvider.of<AuthBlocCubit>(context)
-                      //     .register(
-                      //         _emailController.text, _passwordController.text)
-                      //     .then((value) {
-                      //   _passwordController.clear();
-                      //   _emailController.clear();
-                      // });
+                      BlocProvider.of<LoginCubit>(context).register(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
                     } else {}
                   },
                 )
@@ -117,10 +158,9 @@ class _LoginState extends State<Login> {
                   onTap: () async {
                     if (formKey.currentState!.validate()) {
                       BlocProvider.of<LoginCubit>(context).login(
-                          // _emailController.text,
-                          // _passwordController.text,
-                          //context
-                          );
+                        _emailController.text,
+                        _passwordController.text,
+                      );
                     } else {}
                   },
                 ),
@@ -134,9 +174,10 @@ class _LoginState extends State<Login> {
       alignment: Alignment.center,
       child: TextButton(
         onPressed: () async {
+          // BlocProvider.of<LoginCubit>(context).chackToken();
           setState(() {
-            _passwordController.clear();
-            _emailController.clear();
+            // _passwordController.clear();
+            // _emailController.clear();
             _registerLoad = !_registerLoad;
           });
         },
@@ -146,7 +187,7 @@ class _LoginState extends State<Login> {
               style: TextStyle(color: Colors.black45),
               children: [
                 TextSpan(
-                  text: _registerLoad ? 'Login' : 'Daftar',
+                  text: _registerLoad ? 'Login' : 'Register',
                 ),
               ]),
         ),

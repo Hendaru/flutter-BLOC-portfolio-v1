@@ -23,7 +23,7 @@ class TokenDb {
 
   void _onCreate(Database db, int version) async {
     await db.execute("CREATE TABLE TokenDB("
-        "token VARCHAR,"
+        "token VARCHAR"
         ")");
   }
 
@@ -42,5 +42,10 @@ class TokenDb {
     return List.generate(maps.length, (i) {
       return TokenModel(token: maps[i]['token']);
     });
+  }
+
+  Future<void> deleteLoginDb() async {
+    final dbClient = await db;
+    await dbClient.delete('TokenDB');
   }
 }
