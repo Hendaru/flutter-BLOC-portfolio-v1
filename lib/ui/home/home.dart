@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:transisi/bloc/detailEmployee/detailemployee_cubit.dart';
 import 'package:transisi/bloc/homeCubit/home_cubit.dart';
 import 'package:transisi/bloc/loginCubit/login_cubit.dart';
@@ -15,6 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<Data>? mainDataEmploayees;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,32 +72,11 @@ class _HomeState extends State<Home> {
                 width: 50.0,
               ),
             );
-          } else if (state is HomeLoadedState) {
-            List<Data> mainData = state.responseBody.data!;
-            return ListView.builder(
-              padding: EdgeInsets.only(top: 0),
-              itemCount: mainData.length,
-              itemBuilder: (BuildContext context, int index) => Card(
-                child: InkWell(
-                  onTap: () {
-                    BlocProvider.of<DetailEmployeeCubit>(context)
-                        .getDetailEmployee(mainData[index].id.toString());
-                    Navigator.of(context).pushNamed(
-                      RouteName.detailEmployee,
-                    );
-                  },
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 20.0,
-                      backgroundImage: NetworkImage(mainData[index].avatar!),
-                      backgroundColor: Colors.transparent,
-                    ),
-                    title: Text(mainData[index].firstName!),
-                    trailing: Icon(Icons.more_vert),
-                  ),
-                ),
-              ),
-            );
+          } else if (state is HomeLoadedState || state is HomeLoadMoreState) {
+            if (state is HomeLoadedState) {
+              mainDataEmploayees = state.lisDataEmployee;
+            }
+            return lazyLoad(context, state);
           } else {
             return Center(
               child: SizedBox(
@@ -106,6 +87,54 @@ class _HomeState extends State<Home> {
             );
           }
         },
+      ),
+    );
+  }
+
+  LazyLoadScrollView lazyLoad(BuildContext context, state) {
+    return LazyLoadScrollView(
+      isLoading: true,
+      onEndOfPage: () => BlocProvider.of<HomeCubit>(context).loadMoreData(),
+      child: ListView(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.only(top: 0),
+            itemCount: mainDataEmploayees?.length,
+            itemBuilder: (BuildContext context, int index) => Card(
+              child: InkWell(
+                onTap: () {
+                  BlocProvider.of<DetailEmployeeCubit>(context)
+                      .getDetailEmployee(
+                          mainDataEmploayees![index].id.toString());
+                  Navigator.of(context).pushNamed(
+                    RouteName.detailEmployee,
+                  );
+                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 20.0,
+                    backgroundImage:
+                        NetworkImage(mainDataEmploayees![index].avatar!),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  title: Text(mainDataEmploayees![index].firstName!),
+                  trailing: Icon(Icons.more_vert),
+                ),
+              ),
+            ),
+          ),
+          (state is HomeLoadMoreState)
+              ? Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator(),
+                    height: 20.0,
+                    width: 20.0,
+                  ),
+                )
+              : SizedBox()
+        ],
       ),
     );
   }

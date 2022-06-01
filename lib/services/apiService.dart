@@ -20,9 +20,10 @@ class ApiService {
     return response;
   }
 
-  Future<Response?> getListEmployeeApi() async {
+  Future<Response?> getListEmployeeApi(String page) async {
+    print(page);
     final dio = await dioConfig.dio();
-    final response = await dio.get(Api.BASE_URL + Api.GET_LIST_EMPLOYEE);
+    final response = await dio.get(Api.BASE_URL + Api.GET_LIST_EMPLOYEE + page);
     return response;
   }
 

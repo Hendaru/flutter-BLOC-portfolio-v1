@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
         if (state is LoginErrorState) {
           Fluttertoast.showToast(msg: state.errorMessage!);
         } else if (state is LoginSuccessState) {
-          await BlocProvider.of<HomeCubit>(context).getListEmployee();
+          await BlocProvider.of<HomeCubit>(context).getListEmployee("1");
 
           Fluttertoast.showToast(msg: state.response!);
           Navigator.of(context).pushReplacementNamed(
@@ -67,26 +67,6 @@ class _LoginState extends State<Login> {
             ],
           ),
         );
-        // if (state is TokenExistState) {
-        //   return Home();
-        // } else if (state is LoginInitialState) {
-
-        // } else if (state is LoginLoadingState) {
-        //   return Center(
-        //     child: SizedBox(
-        //       child: CircularProgressIndicator(),
-        //       height: 50.0,
-        //       width: 50.0,
-        //     ),
-        //   );
-        // }
-        // return Center(
-        //   child: SizedBox(
-        //     child: CircularProgressIndicator(),
-        //     height: 50.0,
-        //     width: 50.0,
-        //   ),
-        // );
       }),
     );
   }
@@ -140,6 +120,7 @@ class _LoginState extends State<Login> {
           ),
           _registerLoad
               ? CustomBottom(
+                  isLoading: (state is LoginLoadingState) ? true : false,
                   isActive: true,
                   title: "Register",
                   onTap: () {
@@ -152,6 +133,7 @@ class _LoginState extends State<Login> {
                   },
                 )
               : CustomBottom(
+                  isLoading: (state is LoginLoadingState) ? true : false,
                   isActive: true,
                   title: "Login",
                   onTap: () async {

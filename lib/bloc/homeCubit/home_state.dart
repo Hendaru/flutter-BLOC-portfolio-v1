@@ -12,8 +12,15 @@ class HomeInitial extends HomeCubitState {}
 class HomeLoadingState extends HomeCubitState {}
 
 class HomeLoadedState extends HomeCubitState {
-  late ListDataEmployeeModel responseBody;
-  HomeLoadedState({required this.responseBody});
+  late List<Data> lisDataEmployee;
+  HomeLoadedState({required this.lisDataEmployee});
+  @override
+  List<Object> get props => [lisDataEmployee];
+}
+
+class HomeLoadMoreState extends HomeCubitState {
+  // late List<Data> lisDataEmployee;
+  // HomeLoadMoreState({required this.lisDataEmployee});
 }
 
 class HomeErrorState extends HomeCubitState {

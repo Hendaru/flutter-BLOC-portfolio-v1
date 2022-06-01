@@ -52,6 +52,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future register(String email, String password) async {
     try {
+      emit(LoginLoadingState());
       ApiService apiServices = ApiService();
       LoginModel request = LoginModel(email: email, password: password);
       Response? response = await apiServices.registerApi(request);

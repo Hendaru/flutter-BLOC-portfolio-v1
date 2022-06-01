@@ -26,7 +26,14 @@ class CustomBottom extends StatelessWidget {
         ),
         child: Center(
           child: isLoading
-              ? CircularProgressIndicator()
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
               : InkWell(
                   borderRadius: BorderRadius.circular(50),
                   onTap: onTap,
