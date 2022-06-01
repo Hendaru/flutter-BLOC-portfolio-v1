@@ -15,10 +15,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController _emailController =
-      TextEditingController(text: "eve.holt@reqres.in");
-  TextEditingController _passwordController =
-      TextEditingController(text: "cityslicka");
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool _registerLoad = false;
