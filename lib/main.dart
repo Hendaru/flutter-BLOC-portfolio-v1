@@ -4,6 +4,7 @@ import 'package:transisi/bloc/loginCubit/login_cubit.dart';
 import 'package:transisi/router/appRouter.dart';
 import 'package:transisi/router/routeName.dart';
 
+import 'bloc/createEmployee/createemployee_cubit.dart';
 import 'bloc/detailEmployee/detailemployee_cubit.dart';
 import 'bloc/homeCubit/home_cubit.dart';
 
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<DetailEmployeeCubit>(
           create: (BuildContext context) => DetailEmployeeCubit(),
+        ),
+        BlocProvider<CreateEmployeeCubit>(
+          create: (BuildContext context) => CreateEmployeeCubit(),
         )
       ],
       child: MaterialApp(

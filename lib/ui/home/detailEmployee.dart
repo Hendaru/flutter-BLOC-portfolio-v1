@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transisi/bloc/detailEmployee/detailemployee_cubit.dart';
+import 'package:transisi/model/detailEmployeeModel.dart';
 
 class DetailEmployee extends StatefulWidget {
   DetailEmployee({Key? key}) : super(key: key);
@@ -18,26 +19,14 @@ class _DetailEmployeeState extends State<DetailEmployee> {
           systemOverlayStyle:
               SystemUiOverlayStyle(statusBarColor: Colors.transparent),
           centerTitle: true,
-          automaticallyImplyLeading: false,
+          // automaticallyImplyLeading: false,
           elevation: 0,
+
           title: Text(
-            "List Employees",
+            "Detail Employee",
             style: TextStyle(fontSize: 20),
           ),
-          actions: [
-            IconButton(
-                icon: Icon(
-                  Icons.add_box_rounded,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () async {
-                  // BlocProvider.of<LoginCubit>(context).logout();
-                  // Navigator.of(context).pushReplacementNamed(
-                  //   RouteName.login,
-                  // );
-                })
-          ],
+
           leading: null,
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -49,7 +38,6 @@ class _DetailEmployeeState extends State<DetailEmployee> {
         ),
         body: BlocBuilder<DetailEmployeeCubit, DetailEmployeeState>(
           builder: (context, state) {
-            //  var mainData = state.responBody ;
             if (state is DetailEmployeeLoadingState) {
               return Center(
                 child: SizedBox(
@@ -59,17 +47,49 @@ class _DetailEmployeeState extends State<DetailEmployee> {
                 ),
               );
             } else if (state is DetailEmployeeLoadedState) {
+              Data mainData = state.responBodyDetail.data!;
               return Center(
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 20.0,
-                      backgroundImage: NetworkImage(
-                          'https://reqres.in/img/faces/2-image.jpg'),
-                      backgroundColor: Colors.transparent,
-                    ),
-                    Text("Detail"),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CircleAvatar(
+                        radius: 100.0,
+                        backgroundImage: NetworkImage(mainData.avatar!),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Card(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.email_outlined,
+                            color: Colors.black87,
+                            size: 30,
+                          ),
+                          title: Text(mainData.email!),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Card(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.person_outline_outlined,
+                            color: Colors.black87,
+                            size: 30,
+                          ),
+                          title: Text(
+                              mainData.firstName! + " " + mainData.lastName!),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             } else {

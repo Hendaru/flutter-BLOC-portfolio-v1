@@ -14,6 +14,6 @@ class DetailEmployeeLoadingState extends DetailEmployeeState {}
 class DetailEmployeeErrorState extends DetailEmployeeState {}
 
 class DetailEmployeeLoadedState extends DetailEmployeeState {
-  late DetailEmployeeModel responBody;
-  DetailEmployeeLoadedState({required this.responBody});
+  late DetailEmployeeModel responBodyDetail;
+  DetailEmployeeLoadedState({required this.responBodyDetail});
 }

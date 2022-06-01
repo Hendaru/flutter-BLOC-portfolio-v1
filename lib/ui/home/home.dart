@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:transisi/bloc/detailEmployee/detailemployee_cubit.dart';
 import 'package:transisi/bloc/homeCubit/home_cubit.dart';
 import 'package:transisi/bloc/loginCubit/login_cubit.dart';
 import 'package:transisi/model/listDataEmployeeModel.dart';
@@ -17,6 +18,15 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            RouteName.createEmployee,
+          );
+        },
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         systemOverlayStyle:
             SystemUiOverlayStyle(statusBarColor: Colors.transparent),
@@ -68,6 +78,8 @@ class _HomeState extends State<Home> {
               itemBuilder: (BuildContext context, int index) => Card(
                 child: InkWell(
                   onTap: () {
+                    BlocProvider.of<DetailEmployeeCubit>(context)
+                        .getDetailEmployee(mainData[index].id.toString());
                     Navigator.of(context).pushNamed(
                       RouteName.detailEmployee,
                     );

@@ -18,7 +18,7 @@ class DetailEmployeeCubit extends Cubit<DetailEmployeeState> {
         emit(DetailEmployeeErrorState());
       } else {
         var res = DetailEmployeeModel.fromJson(response?.data);
-        emit(DetailEmployeeLoadedState(responBody: res));
+        emit(DetailEmployeeLoadedState(responBodyDetail: res));
       }
     } catch (e) {
       emit(DetailEmployeeErrorState());

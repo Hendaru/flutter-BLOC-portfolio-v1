@@ -28,7 +28,6 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) async {
-        print(state);
         if (state is LoginErrorState) {
           Fluttertoast.showToast(msg: state.errorMessage!);
         } else if (state is LoginSuccessState) {
